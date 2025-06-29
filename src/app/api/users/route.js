@@ -1,21 +1,60 @@
 import { NextResponse } from "next/server";
 const { DbConnection } = require("@/app/helper/db");
 const { User } = require("../../../models/user");
+const bcrypt = require("bcrypt");
+
 DbConnection();
 
-const newUser = new User({
-  name: "Rishabh Jaiswal",
-  email: "example2@gmail.com",
-  password: "12345",
-  about: "thids is rishabh",
-});
-await newUser.save();
-console.log("new user created");
-// app/api/users/route.js
+// GET all users
 export async function GET() {
-  return NextResponse.json({ message: "Hello from GET!" });
+  try {
+    const users = await User.find();
+
+    return NextResponse.json(
+      {
+        message: "All users fetched successfully",
+        users,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: "Failed to fetch users",
+        error: error.message,
+      },
+      { status: 500 }
+    );
+  }
 }
 
-export async function POST() {
-  return NextResponse.json({ message: "Hello from POST!" });
+// create user
+export async function POST(request) {
+  try {
+    const body = await request.json();
+    const { name, email, password, about } = body;
+
+    if (!name || !email || !password) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+    const saltrounds = parseInt(process.env.SALT_ROUNDS);
+    const salt = await bcrypt.genSalt(saltrounds);
+    const hashPassword = await bcrypt.hash(password, salt);
+    const newUser = new User({ name, email, password: hashPassword, about });
+    await newUser.save();
+    console.log(`New user creted successfully: ${newUser}`);
+
+    return NextResponse.json(
+      { message: "User created successfully", user: newUser },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Server error", error: error.message },
+      { status: 500 }
+    );
+  }
 }
