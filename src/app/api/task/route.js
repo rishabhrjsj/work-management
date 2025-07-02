@@ -1,6 +1,8 @@
 import { Task } from "@/models/task";
+import { jwtDecrypt } from "jose";
 import { NextResponse } from "next/server";
 const { DbConnection } = require("@/app/helper/db");
+import jwt from "jsonwebtoken";
 
 DbConnection();
 //show all task
@@ -30,12 +32,18 @@ export async function GET(request) {
 // Create task
 export async function POST(request) {
   try {
-    const { work, description, user } = await request.json();
+    const loginToken = request.cookies.get("loginToken")?.value;
+    console.log("login token ", loginToken);
+    const data = jwt.verify(loginToken, process.env.JWT_TOKEN);
 
+    console.log("currentuser data", data);
+    const { work, description, status } = await request.json();
+    console.log("📥 Received:", { work, description, status });
     const newTask = new Task({
       work,
       description,
-      user,
+      status,
+      userId: data.userId,
     });
 
     await newTask.save(); // 🔁 await save

@@ -1,7 +1,8 @@
-export default function ShowTask() {
+import ShowTask from "./ShowTask";
+export default function ShowTaskPage() {
   return (
     <div>
-      <h1 className="text-5xl">This is Show task page</h1>
+      <ShowTask />
     </div>
   );
 }

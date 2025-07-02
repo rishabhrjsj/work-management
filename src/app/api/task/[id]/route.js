@@ -57,7 +57,7 @@ export async function PUT(request, { params }) {
   try {
     const updatedTask = await Task.findByIdAndUpdate(
       taskId,
-      { taskStatus: true },
+      { status: true },
       { new: true }
     );
 

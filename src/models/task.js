@@ -9,11 +9,12 @@ const taskSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    taskStatus: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: ["pending", "completed"],
+      default: "pending",
     },
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,

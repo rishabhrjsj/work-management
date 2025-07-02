@@ -10,13 +10,16 @@ export default function AddTask() {
     work: "",
     description: "",
     status: "",
-    user: "685ba62874845ff799ec87c3",
+    user: "",
   });
   console.log(formData);
 
   const handleSubmit = async (event) => {
+    console.log("form data", formData);
     event.preventDefault();
     try {
+      // formData.user = data._id;
+
       const res = await addTask(formData); // ✅ Await the async call
       console.log("Task added:", res); // ✅ Optional: check the response
       alert("Succesfuuly task added.");
@@ -28,7 +31,7 @@ export default function AddTask() {
       work: "",
       description: "",
       status: "",
-      user: "685ba62874845ff799ec87c3",
+      user: "",
     });
   };
   const handleInputChange = (event) => {
@@ -110,7 +113,7 @@ export default function AddTask() {
                 work: "",
                 description: "",
                 status: "",
-                user: "685ba62874845ff799ec87c3",
+                user: "",
               })
             }
             className="bg-red-600 rounded-lg p-2 mt-4">

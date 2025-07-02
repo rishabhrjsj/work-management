@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import addUser from "../services/addUserService";
+import { useRouter } from "next/navigation";
 const SignUp = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -8,6 +9,7 @@ const SignUp = () => {
     password: "",
     about: "",
   });
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,6 +33,8 @@ const SignUp = () => {
       const res = await addUser(formData);
       console.log("Form Submitted:", formData);
       alert(`New User Created : ${formData.name}`);
+      router.push("/");
+
       setFormData({ name: "", email: "", password: "", about: "" });
       // Optionally reset form here
     } catch (error) {
