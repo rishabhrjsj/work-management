@@ -28,12 +28,14 @@ export async function GET(request, { params }) {
 
 //delete task
 
-export async function DELETE(request, { params }) {
-  const taskId = params.id;
+export async function DELETE(request, context) {
+  const { id } = context.params;
+  const taskId = id;
   try {
     const task = await Task.findByIdAndDelete(taskId);
     console.log(`task deleted ${task}`);
     return NextResponse.json({
+      success: true,
       task: task,
       message: "task deleted",
     });
